@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/profile.dart';
 import 'package:flutter_application_1/registration.dart';
+import 'package:flutter_application_1/services/filrebaseauthservice.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+TextEditingController emailController = TextEditingController();
+
+TextEditingController passwordController = TextEditingController();
+
+bool isloading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,13 +25,14 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Welcom Back',
+              'Welcome Back',
               style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
             ),
             Text('Enter your credentials to login'),
             SizedBox(height: 20),
             // Username TextField
             TextField(
+              controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Username',
                 prefixIcon: Icon(Icons.person),
@@ -39,6 +52,7 @@ class LoginPage extends StatelessWidget {
 
             // Password TextField
             TextField(
+              controller: passwordController,
               obscureText: true, // to hide the password
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -62,8 +76,14 @@ class LoginPage extends StatelessWidget {
                 fixedSize: Size(MediaQuery.of(context).size.width, 50),
                 backgroundColor: Color.fromARGB(255, 127, 32, 156),
               ),
-              onPressed: () {
-                // Sign-up logic here
+              onPressed: ()async {
+                setState(() {
+                  isloading = true;
+                });
+                await login(email: emailController.text, password: passwordController.text, context: context);
+                setState(() {
+                  isloading = false;
+                });
               },
               child: Text(
                 'Login',
@@ -72,7 +92,6 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 15),
            
-
                 
                 Padding(
                   padding: const EdgeInsets.only(left: 85),
@@ -82,7 +101,7 @@ class LoginPage extends StatelessWidget {
 
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=> Registrationpage()));
+                        Navigator.pop(context, MaterialPageRoute(builder: (context)=> Registrationpage()));
                       },
                       child: Text('Signu Up',style: TextStyle(color: const Color.fromARGB(255, 214, 64, 255),fontWeight: FontWeight.bold),))
                   ],),

@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/login.dart';
+import 'package:flutter_application_1/services/filrebaseauthservice.dart';
 
-class Registrationpage extends StatelessWidget {
-  const Registrationpage({super.key});
+class Registrationpage extends StatefulWidget {
+
+  @override
+  State<Registrationpage> createState() => _RegistrationpageState();
+}
+
+class _RegistrationpageState extends State<Registrationpage> {
+TextEditingController usernameController = TextEditingController();
+
+TextEditingController emailController = TextEditingController();
+
+TextEditingController passwordController = TextEditingController();
+
+TextEditingController confirmpasswordController = TextEditingController();
+
+bool isloading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +35,7 @@ class Registrationpage extends StatelessWidget {
             SizedBox(height: 20),
             // Username TextField
             TextField(
+              controller: usernameController,
               decoration: InputDecoration(
                 labelText: 'Username',
                 prefixIcon: Icon(Icons.person),
@@ -36,6 +52,7 @@ class Registrationpage extends StatelessWidget {
             SizedBox(height: 15),
             // Email TextField
             TextField(
+              controller: emailController,
               decoration: InputDecoration(
                 labelText: 'Email',
                 prefixIcon: Icon(Icons.email),
@@ -53,6 +70,7 @@ class Registrationpage extends StatelessWidget {
             SizedBox(height: 15),
             // Password TextField
             TextField(
+              controller: passwordController,
               obscureText: true, // to hide the password
               decoration: InputDecoration(
                 labelText: 'Password',
@@ -70,6 +88,7 @@ class Registrationpage extends StatelessWidget {
             SizedBox(height: 15),
             // Confirm Password TextField
             TextField(
+              controller: confirmpasswordController,
               obscureText: true, // to hide the password
               decoration: InputDecoration(
                 labelText: 'Confirm Password',
@@ -91,10 +110,16 @@ class Registrationpage extends StatelessWidget {
                 fixedSize: Size(MediaQuery.of(context).size.width, 50),
                 backgroundColor: Color.fromARGB(255, 127, 32, 156),
               ),
-              onPressed: () {
-                // Sign-up logic here
+              onPressed: ()async {
+                setState(() {
+                  isloading = true;
+                });
+                await signup(username: usernameController.text, email: emailController.text, password: passwordController.text, confirmpassword: confirmpasswordController.text,context: context);
+                setState(() {
+                  isloading = false;
+                });
               },
-              child: Text(
+              child: isloading?CircularProgressIndicator(): Text(
                 'Sign up',
                 style: TextStyle(color: Colors.white),
               ),
@@ -124,7 +149,7 @@ class Registrationpage extends StatelessWidget {
 
                     GestureDetector(
                       onTap: (){
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> LoginPage()));
                       },
                       child: Text('Login',style: TextStyle(color: const Color.fromARGB(255, 214, 64, 255),fontWeight: FontWeight.bold),))
                   ],),
